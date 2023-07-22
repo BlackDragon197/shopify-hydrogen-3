@@ -35,10 +35,10 @@ export default function Collection({ params, request }) {
   sortReverse = url.searchParams.get('reverse') === 'true' ? true : false;
   let filterAvailability = true;
 
-  filterColor = url.searchParams.has('color') ? true : false;
-  filterColor ? (color = url.searchParams.get('color')) : '';
-  filterSize = url.searchParams.get('size') ? true : false;
-  filterSize ? (size = url.searchParams.get('size')) : '';
+  filterColor = url.searchParams.has('Color') ? true : false;
+  filterColor ? (color = url.searchParams.get('Color')) : '';
+  filterSize = url.searchParams.get('Size') ? true : false;
+  filterSize ? (size = url.searchParams.get('Size')) : '';
   let fullparams = [];
   url.searchParams.forEach((value, key) => {
     fullparams.push(key);
@@ -186,8 +186,8 @@ export default function Collection({ params, request }) {
   // }
   // console.log('umnik:', array, free);
   let sigma;
-  let filterObj = { size: [] };
-  let colorObj = { color: [] };
+  let filterObj = { Size: [] };
+  let colorObj = { Color: [] };
   let options = [];
   let sizes = new Set();
   let colors = new Set();
@@ -204,10 +204,10 @@ export default function Collection({ params, request }) {
       });
     });
   });
-  colorObj.color = Array.from(colors);
-  filterObj.size = Array.from(sizes);
+  colorObj.Color = Array.from(colors);
+  filterObj.Size = Array.from(sizes);
   Object.assign(filterObj, colorObj);
-  console.log(filterObj);
+  console.log('sho eto:', filterObj);
   if (!collection) {
     return <NotFound type="collection" />;
   }
