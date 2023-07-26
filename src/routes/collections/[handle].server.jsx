@@ -200,7 +200,6 @@ export default function Collection({ params, request }) {
   sigma = Object.values(mem);
   alpha = Object.values(typ);
   sigma[0].map((el) => {
-    console.log('ele: ', el);
     options.push(Object.entries(el)[5][1]);
     options.map((el) => {
       el.map((el1) => {

@@ -12,8 +12,24 @@ export function ProductGrid({ url, collection }) {
   const [nextPage, setNextPage] = useState(hasNextPage);
   const [pending, setPending] = useState(false);
   const haveProducts = initialProducts.length > 0;
-
+  const [filter, setFilter] = useState('');
   let color = 'Syntax';
+  let search = useUrl().searchParams;
+  let params = [];
+  useEffect(() => {
+    console.log('ss: ', search);
+    for (const [key, value] of search.entries()) {
+      let p = {};
+      if (
+        params.map((el) => {
+          el.key === key;
+        })
+      ) {
+        params[key] = [params[key] ? (params[key], value) : value];
+      }
+    }
+    console.log('para: ', params);
+  }, [search]);
 
   const fetchProducts = useCallback(async () => {
     setPending(true);
