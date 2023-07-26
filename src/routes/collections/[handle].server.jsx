@@ -25,9 +25,9 @@ var filterMinPrice = 200;
 var filterMaxPrice = 4000;
 var filterPrice = false;
 var color;
-var size;
+var type;
 var filterColor = false;
-var filterSize = false;
+var filterType = false;
 export default function Collection({ params, request }) {
   const { handle } = params;
   const url = new URL(request.url);
@@ -37,13 +37,13 @@ export default function Collection({ params, request }) {
 
   filterColor = url.searchParams.has('Color') ? true : false;
   filterColor ? (color = url.searchParams.get('Color')) : '';
-  filterSize = url.searchParams.get('Size') ? true : false;
-  filterSize ? (size = url.searchParams.get('Size')) : '';
+  filterType = url.searchParams.get('ProductType') ? true : false;
+  filterType ? (type = url.searchParams.get('ProductType')) : '';
   let fullparams = [];
   url.searchParams.forEach((value, key) => {
     fullparams.push(key);
   });
-  console.log('full:', fullparams);
+  //console.log('full:', fullparams);
   filterPrice = url.searchParams.get('price') === 'true' ? true : false;
   if (filterPrice) {
     filterMinPrice = parseFloat(url.searchParams.get('min'));
@@ -72,7 +72,7 @@ export default function Collection({ params, request }) {
           },
           preload: true,
         })
-      : filterSize === true
+      : filterType === true
       ? useShopQuery({
           query: COLLECTION_FILTER_SIZE,
           variables: {
@@ -82,7 +82,6 @@ export default function Collection({ params, request }) {
             pageBy,
             sortKey,
             sortReverse,
-            size,
           },
           preload: true,
         })
@@ -139,6 +138,11 @@ export default function Collection({ params, request }) {
           preload: true,
         });
 
+  let typ = useShopQuery({
+    query: COLLECTION_FILTERS,
+    preload: true,
+  });
+
   let mem = useShopQuery({
     query: COLLECTION_QUERY_FULL,
     variables: {
@@ -156,8 +160,8 @@ export default function Collection({ params, request }) {
     filterPrice,
     'color:',
     filterColor,
-    'size',
-    filterSize
+    'type',
+    filterType
   );
 
   // let arr = [];
@@ -186,28 +190,37 @@ export default function Collection({ params, request }) {
   // }
   // console.log('umnik:', array, free);
   let sigma;
-  let filterObj = { Size: [] };
+  let alpha;
+  let filterObj = { 'Product Type': [] };
   let colorObj = { Color: [] };
   let options = [];
-  let sizes = new Set();
+  let typeOptions = [];
+  let types = new Set();
   let colors = new Set();
   sigma = Object.values(mem);
+  alpha = Object.values(typ);
   sigma[0].map((el) => {
+    console.log('ele: ', el);
     options.push(Object.entries(el)[5][1]);
     options.map((el) => {
       el.map((el1) => {
-        el1.name === 'Size'
-          ? el1.values.map((size) => sizes.add(size))
-          : el1.name === 'Color'
+        el1.name === 'Color'
           ? el1.values.map((color) => colors.add(color))
           : '';
       });
     });
   });
+  alpha.map((el) => {
+    typeOptions.push(Object.entries(el)[0][1].edges[0]);
+    typeOptions.map((el) => {
+      types.add(el.node);
+    });
+  });
+  console.log('alp: ', types);
   colorObj.Color = Array.from(colors);
-  filterObj.Size = Array.from(sizes);
+  filterObj['Product Type'] = Array.from(types);
   Object.assign(filterObj, colorObj);
-  console.log('sho eto:', filterObj);
+  console.log(filterObj);
   if (!collection) {
     return <NotFound type="collection" />;
   }
@@ -319,6 +332,20 @@ const COLLECTION_QUERY_FULL = gql`
         }
       }
     }
+  }
+`;
+
+const COLLECTION_FILTERS = gql`
+  query  {productTypes(first: 100) {
+    edges {
+      cursor
+      node
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  }
   }
 `;
 
@@ -551,7 +578,6 @@ const COLLECTION_FILTER_SIZE = gql`
     $cursor: String
     $sortKey:  ProductCollectionSortKeys
     $sortReverse: Boolean
-    $size: String!
   ) @inContext(country: $country, language: $language) {
     collection(handle: $handle) {
       id

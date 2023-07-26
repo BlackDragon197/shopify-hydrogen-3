@@ -75,37 +75,37 @@ export function ProductGrid({ url, collection }) {
       </>
     );
   } else {
-    let f = 'Syntax';
-    const { searchParams } = useUrl();
-    console.log(searchParams);
-    let fs = [];
-    searchParams.forEach((value, key) => {
-      fs.push({ key, value });
-    });
-    fs.push({ Color: 'Syntax' });
-    let m = products;
-    let a = [];
-    a = m.filter((item) => {
-      if (
-        item.options.map((op) => {
-          for (var count = 0; count < fs.length; count++) {
-            console.log('op:', op.name);
-            console.log('fop:', Object.keys(fs[count])[0]);
-            console.log('opfop:', op.name === Object.keys(fs[count])[0]);
-            if (
-              op.name == Object.keys(fs[count])[0] //&&
-              //op.values.includes(Object.values(fop)[0])
-            ) {
-              return item;
-            }
-          }
-          return;
-        })
-      )
-        return item;
-    });
-    console.log(typeof a);
-    console.log(a, fs);
+    // let f = 'Syntax';
+    // const { searchParams } = useUrl();
+    // console.log(searchParams);
+    // let fs = [];
+    // searchParams.forEach((value, key) => {
+    //   fs.push({ key, value });
+    // });
+    // fs.push({ Color: 'Syntax' });
+    // let m = products;
+    // let a = [];
+    // a = m.filter((item) => {
+    //   if (
+    //     item.options.map((op) => {
+    //       for (var count = 0; count < fs.length; count++) {
+    //         console.log('op:', op.name);
+    //         console.log('fop:', Object.keys(fs[count])[0]);
+    //         console.log('opfop:', op.name === Object.keys(fs[count])[0]);
+    //         if (
+    //           op.name == Object.keys(fs[count])[0] //&&
+    //           //op.values.includes(Object.values(fop)[0])
+    //         ) {
+    //           return item;
+    //         }
+    //       }
+    //       return;
+    //     })
+    //   )
+    //     return item;
+    // });
+    // console.log(typeof a);
+    // console.log(a, fs);
     //products = a;
   }
 
