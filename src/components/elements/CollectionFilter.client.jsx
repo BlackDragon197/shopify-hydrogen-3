@@ -41,12 +41,10 @@ export function CollectionFilter({ minPrice, maxPrice, filterObj }) {
     const filterValue = event.target
       .closest('li')
       .getAttribute('data-filter-value');
-    let keys = new Set();
-    let values = new Set();
 
     if (params.getAll(filterName).includes(filterValue)) {
       let temp = params.getAll(filterName).filter((el) => el !== filterValue);
-      console.log('temp: ', temp);
+
       url.searchParams.delete(filterName);
       temp.map((el) => {
         url.searchParams.append(filterName, el);
@@ -54,7 +52,6 @@ export function CollectionFilter({ minPrice, maxPrice, filterObj }) {
     } else {
       url.searchParams.append(filterName, filterValue);
     }
-    console.log('keyval: ', keys, values);
     // if (params.has(filterName, filterValue)) {
     //   url.searchParams.delete(filterName, filterValue);
     // } else {

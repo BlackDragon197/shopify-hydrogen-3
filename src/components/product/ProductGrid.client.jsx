@@ -13,22 +13,31 @@ export function ProductGrid({ url, collection }) {
   const [pending, setPending] = useState(false);
   const haveProducts = initialProducts.length > 0;
   const [filter, setFilter] = useState('');
-  let color = 'Syntax';
   let search = useUrl().searchParams;
   let params = [];
+  let filts = [];
   useEffect(() => {
     console.log('ss: ', search);
     for (const [key, value] of search.entries()) {
-      let p = {};
-      if (
-        params.map((el) => {
-          el.key === key;
-        })
-      ) {
-        params[key] = [params[key] ? (params[key], value) : value];
-      }
+      let p = { name: key, value: value };
+      params.push(p);
     }
-    console.log('para: ', params);
+    params.forEach((item) => {
+      var existing = filts.filter((v, i) => {
+        console.log(v);
+        return v.name == item.name;
+      });
+      if (existing.length) {
+        var existingIndex = filts.indexOf(existing[0]);
+        filts[existingIndex].value = filts[existingIndex].value.concat(
+          item.value
+        );
+      } else {
+        if (typeof item.value == 'string') item.value = [item.value];
+        filts.push(item);
+      }
+    });
+    console.log('para: ', filts);
   }, [search]);
 
   const fetchProducts = useCallback(async () => {
