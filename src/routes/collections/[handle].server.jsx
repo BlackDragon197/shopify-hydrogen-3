@@ -29,6 +29,7 @@ var type;
 var filterColor = false;
 var filterType = false;
 export default function Collection({ params, request }) {
+  console.log('ara: ', params);
   const { handle } = params;
   const url = new URL(request.url);
   sortKey = url.searchParams.get('sortkey');
@@ -219,7 +220,10 @@ export default function Collection({ params, request }) {
   colorObj.Color = Array.from(colors);
   filterObj['Product Type'] = Array.from(types);
   Object.assign(filterObj, colorObj);
-  console.log(filterObj);
+  console.log(filterObj, collection);
+
+  let filteredCollection = {};
+
   if (!collection) {
     return <NotFound type="collection" />;
   }
@@ -381,6 +385,7 @@ const COLLECTION_QUERY = gql`
             name
             values
           }
+          productType
         }
         pageInfo {
           hasNextPage
@@ -513,6 +518,7 @@ const COLLECTION_FILTER_PRICE_QUERY = gql`
             name
             values
           }
+          productType
         }
         pageInfo {
           hasNextPage
@@ -557,6 +563,7 @@ const COLLECTION_FILTER_COLOR = gql`
             name
             values
           }
+          productType
         }
         pageInfo {
           hasNextPage
@@ -600,6 +607,7 @@ const COLLECTION_FILTER_SIZE = gql`
             name
             values
           }
+          productType
         }
         pageInfo {
           hasNextPage
@@ -627,6 +635,7 @@ const PAGINATE_COLLECTION_QUERY = gql`
             name
             values
           }
+          productType
         }
         pageInfo {
           hasNextPage

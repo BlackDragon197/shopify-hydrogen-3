@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link, flattenConnection, useUrl } from '@shopify/hydrogen';
-
 import { Button, Grid, ProductCard } from '~/components';
 import { getImageLoadingPriority } from '~/lib/const';
+
 export function ProductGrid({ url, collection }) {
   const nextButtonRef = useRef(null);
   const initialProducts = collection?.products?.nodes || [];
@@ -12,19 +12,19 @@ export function ProductGrid({ url, collection }) {
   const [nextPage, setNextPage] = useState(hasNextPage);
   const [pending, setPending] = useState(false);
   const haveProducts = initialProducts.length > 0;
+  let filteredProducts = new Set();
   const [filter, setFilter] = useState('');
   let search = useUrl().searchParams;
   let params = [];
   let filts = [];
+
   useEffect(() => {
-    console.log('ss: ', search);
     for (const [key, value] of search.entries()) {
       let p = { name: key, value: value };
       params.push(p);
     }
     params.forEach((item) => {
       var existing = filts.filter((v, i) => {
-        console.log(v);
         return v.name == item.name;
       });
       if (existing.length) {
@@ -33,12 +33,28 @@ export function ProductGrid({ url, collection }) {
           item.value
         );
       } else {
-        ('');
         if (typeof item.value == 'string') item.value = [item.value];
         filts.push(item);
       }
     });
-    console.log('para: ', filts);
+    setFilter(filts);
+    function filterByType(value) {
+      filts.map((fil) => {
+        if (fil.name === 'Product Type') {
+          if (Object.values(fil)[1].includes(value.productType)) {
+            filteredProducts.add(value);
+          }
+        }
+      });
+    }
+    products.filter(filterByType);
+    prodmem = products;
+    filts.map((el) =>
+      el.name === 'Product Type' ? (prodmem = Array.from(filteredProducts)) : ''
+    );
+
+    console.log('ama: ', prodmem);
+    console.log('ama2: ', products);
   }, [search]);
 
   const fetchProducts = useCallback(async () => {
@@ -60,6 +76,7 @@ export function ProductGrid({ url, collection }) {
       data?.products?.pageInfo || { endCursor: '', hasNextPage: false };
 
     setProducts([...products, ...newProducts]);
+
     setCursor(endCursor);
 
     setNextPage(hasNextPage);
@@ -71,6 +88,7 @@ export function ProductGrid({ url, collection }) {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           fetchProducts();
+          console.log(products);
         }
       });
     },
@@ -101,44 +119,12 @@ export function ProductGrid({ url, collection }) {
       </>
     );
   } else {
-    // let f = 'Syntax';
-    // const { searchParams } = useUrl();
-    // console.log(searchParams);
-    // let fs = [];
-    // searchParams.forEach((value, key) => {
-    //   fs.push({ key, value });
-    // });
-    // fs.push({ Color: 'Syntax' });
-    // let m = products;
-    // let a = [];
-    // a = m.filter((item) => {
-    //   if (
-    //     item.options.map((op) => {
-    //       for (var count = 0; count < fs.length; count++) {
-    //         console.log('op:', op.name);
-    //         console.log('fop:', Object.keys(fs[count])[0]);
-    //         console.log('opfop:', op.name === Object.keys(fs[count])[0]);
-    //         if (
-    //           op.name == Object.keys(fs[count])[0] //&&
-    //           //op.values.includes(Object.values(fop)[0])
-    //         ) {
-    //           return item;
-    //         }
-    //       }
-    //       return;
-    //     })
-    //   )
-    //     return item;
-    // });
-    // console.log(typeof a);
-    // console.log(a, fs);
-    //products = a;
   }
 
   return (
     <>
       <Grid layout="products">
-        {products.map((product, i) => (
+        {prodmem?.map((product, i) => (
           <ProductCard
             key={product.id}
             product={product}
@@ -165,3 +151,4 @@ export function ProductGrid({ url, collection }) {
     </>
   );
 }
+let prodmem;
