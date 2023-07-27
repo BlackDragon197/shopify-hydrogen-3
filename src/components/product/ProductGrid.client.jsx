@@ -33,6 +33,7 @@ export function ProductGrid({ url, collection }) {
           item.value
         );
       } else {
+        ('');
         if (typeof item.value == 'string') item.value = [item.value];
         filts.push(item);
       }
