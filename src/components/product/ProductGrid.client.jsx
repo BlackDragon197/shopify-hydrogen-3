@@ -43,11 +43,32 @@ export function ProductGrid({ url, collection }) {
         if (fil.name === 'Product Type') {
           if (Object.values(fil)[1].includes(value.productType)) {
             filteredProducts.add(value);
+            console.log(fil.name);
           }
         }
       });
     }
+    function filterByColor(value) {
+      filts.map((fil) => {
+        // if ((fil.name = 'Color')) {
+        // if ( value.options.some(el => Object.values(fil)[1].includes(el.value)) Object.values(fil)[1].includes(value.productType)) {
+        //console.log(value);
+        //   filteredProducts.add(value);
+        // }
+        if (fil.name === 'Color') {
+          let p = value.options.filter((k) => k.name === 'Color')[0].values;
+          let f = filts.filter((k) => k.name === 'Color')[0].value;
+          p.map((pval) => {
+            f.includes(pval) ? filteredProducts.add(value) : '';
+          });
+          console.log(f);
+          console.log(p);
+        }
+        //   }
+      });
+    }
     products.filter(filterByType);
+    products.filter(filterByColor);
     prodmem = products;
     filts.map((el) =>
       el.name === 'Product Type' ? (prodmem = Array.from(filteredProducts)) : ''
