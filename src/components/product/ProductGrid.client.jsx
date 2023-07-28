@@ -56,10 +56,10 @@ export function ProductGrid({ url, collection }) {
         //   filteredProducts.add(value);
         // }
         if (fil.name === 'Color') {
-          let p = value.options.filter((k) => k.name === 'Color')[0].values;
+          let p = value?.options?.filter((k) => k.name === 'Color')[0]?.values;
           let f = filts.filter((k) => k.name === 'Color')[0].value;
-          p.map((pval) => {
-            f.includes(pval) ? filteredProducts.add(value) : '';
+          p?.map((pval) => {
+            f?.includes(pval) ? filteredProducts.add(value) : '';
           });
           console.log(f);
           console.log(p);
@@ -70,12 +70,10 @@ export function ProductGrid({ url, collection }) {
     products.filter(filterByType);
     products.filter(filterByColor);
     prodmem = products;
-    filts.map((el) =>
-      el.name === 'Product Type' ? (prodmem = Array.from(filteredProducts)) : ''
-    );
-
+    prodmem = Array.from(filteredProducts);
+    
     console.log('ama: ', prodmem);
-    console.log('ama2: ', products);
+    console.log('ama2: ', filteredProducts);
   }, [search]);
 
   const fetchProducts = useCallback(async () => {

@@ -88,7 +88,7 @@ export default function Collection({ params, request }) {
         })
       : filterColor === true
       ? useShopQuery({
-          query: COLLECTION_FILTER_COLOR,
+          query: COLLECTION_QUERY,
           variables: {
             handle,
             language,
@@ -96,7 +96,6 @@ export default function Collection({ params, request }) {
             pageBy,
             sortKey,
             sortReverse,
-            color,
           },
           preload: true,
         })
