@@ -35,8 +35,9 @@ export function ProductGrid({ url, collection }) {
         if (typeof item.value == 'string') item.value = [item.value];
         filts.push(item);
       }
-    }), [];
-    
+    }),
+      [];
+
     setFilter(filts);
     prodmem = products;
     function filterByType(value) {
@@ -44,7 +45,6 @@ export function ProductGrid({ url, collection }) {
         if (fil.name === 'Product Type') {
           if (Object.values(fil)[1].includes(value.productType)) {
             filteredProducts.add(value);
-            console.log(fil.name);
           }
           prodmem = Array.from(filteredProducts);
         }
@@ -65,14 +65,15 @@ export function ProductGrid({ url, collection }) {
       });
     }
     filts.map((fil) => {
-    fil.name==='Color'?products.filter(filterByColor):fil.name==='Color'?products.filter(filterByType):''
-    })
-    console.log('ama: ', prodmem);
-    localStorage.setItem('prodCount', prodmem.length||0)
-    window.dispatchEvent(new Event("storage"));
+      fil.name === 'Color'
+        ? products.filter(filterByColor)
+        : fil.name === 'Color'
+        ? products.filter(filterByType)
+        : '';
+    });
+    localStorage.setItem('prodCount', prodmem.length || 0);
+    window.dispatchEvent(new Event('storage'));
   }, [search]);
-
-
 
   const fetchProducts = useCallback(async () => {
     setPending(true);
@@ -83,7 +84,6 @@ export function ProductGrid({ url, collection }) {
       method: 'POST',
     });
     const { data } = await response.json();
-    console.log('products:', data);
     // ProductGrid can paginate collection, products and search routes
     // @ts-ignore TODO: Fix types
     const newProducts = flattenConnection(
@@ -105,7 +105,6 @@ export function ProductGrid({ url, collection }) {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           fetchProducts();
-          console.log(products);
         }
       });
     },

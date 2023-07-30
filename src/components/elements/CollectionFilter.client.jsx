@@ -6,49 +6,47 @@ import { FaArrowDown } from './FaArrowDown';
 export function CollectionFilter({ minPrice, maxPrice, filterObj }) {
   const [minPriceRange, setminPriceRange] = useState(minPrice);
   const [maxPriceRange, setmaxPriceRange] = useState(maxPrice);
-  const [prodCount, setProdCount] = useState()
+  const [prodCount, setProdCount] = useState();
   let item;
-  
+
   let search = useUrl().searchParams;
   window.addEventListener('storage', () => {
-    item = localStorage.getItem('prodCount')
-    setProdCount(item)
-})
-  let typeL = search.getAll('Product Type').length
-  let colorL = search.getAll('Color').length
-  console.log('colfe', typeL, colorL)
-// useEffect(() => {
-//   let totalChanges = 0;
-//   for (const [key, value] of search.entries()) {
-//     if (key === 'Color' || key === 'Product Type') {
-//       let temp = document.getElementsByClassName('main' + value);
-//       if (temp.length) {
-//         totalChanges++;
-//       }
-//     }
-//   }
-// }, [search]);
+    item = localStorage.getItem('prodCount');
+    setProdCount(item);
+  });
+  let typeL = search.getAll('Product Type').length;
+  let colorL = search.getAll('Color').length;
+  // useEffect(() => {
+  //   let totalChanges = 0;
+  //   for (const [key, value] of search.entries()) {
+  //     if (key === 'Color' || key === 'Product Type') {
+  //       let temp = document.getElementsByClassName('main' + value);
+  //       if (temp.length) {
+  //         totalChanges++;
+  //       }
+  //     }
+  //   }
+  // }, [search]);
 
-// useEffect(() => {
-//   for (const [key, value] of search.entries()) {
-//     if (key === 'Color' || key === 'Product Type') {
-//       let temp = document.getElementsByClassName('main' + value);
+  // useEffect(() => {
+  //   for (const [key, value] of search.entries()) {
+  //     if (key === 'Color' || key === 'Product Type') {
+  //       let temp = document.getElementsByClassName('main' + value);
 
-//         temp[0].classList.add('font-bold');
-//     }
-//   }
-// }, [search]);
+  //         temp[0].classList.add('font-bold');
+  //     }
+  //   }
+  // }, [search]);
   setTimeout(() => {
     for (const [key, value] of search.entries()) {
-      if (key === 'Color'){
-        let temp = document.getElementsByClassName('main'+value);
-        if(temp.length){
+      if (key === 'Color') {
+        let temp = document.getElementsByClassName('main' + value);
+        if (temp.length) {
           temp[0].classList.add('font-bold');
         }
-
-      }else if(key === "Product Type"){
-        let temp = document.getElementsByClassName('main'+value);
-        temp[0]?.classList.add('font-bold')
+      } else if (key === 'Product Type') {
+        let temp = document.getElementsByClassName('main' + value);
+        temp[0]?.classList.add('font-bold');
       }
     }
   }, 0);
@@ -74,24 +72,23 @@ export function CollectionFilter({ minPrice, maxPrice, filterObj }) {
 
   const OnResetColor = (event) => {
     const url = new URL(window.location.href);
-      url.searchParams.delete('Color');
+    url.searchParams.delete('Color');
     window.location.href = url.toString();
-  }
+  };
 
-const OnResetType = (event) => {
-    const url = new URL(window.location.href)
+  const OnResetType = (event) => {
+    const url = new URL(window.location.href);
     url.searchParams.delete('Product Type');
     window.location.href = url.toString();
-  }
+  };
 
   const OnResetPrice = (event) => {
-    const url = new URL(window.location.href)
+    const url = new URL(window.location.href);
     url.searchParams.delete('price');
-    url.searchParams.delete('min')
-    url.searchParams.delete('max')
+    url.searchParams.delete('min');
+    url.searchParams.delete('max');
     window.location.href = url.toString();
-  }
-
+  };
 
   const onFilterAvailabilityParam = (event) => {
     const url = new URL(window.location.href);
@@ -111,7 +108,7 @@ const OnResetType = (event) => {
     } else {
       url.searchParams.append(filterName, filterValue);
     }
-   
+
     // if (params.has(filterName, filterValue)) {
     //   url.searchParams.delete(filterName, filterValue);
     // } else {
@@ -175,17 +172,33 @@ const OnResetType = (event) => {
     }
   };
 
-const Total = (m) => {
-  if(m.m === 'Color' && colorL>0)
-  return <li className='bg-gj border-1'>{colorL} Selected <div className="reset text-gray-500 float-right mr-4" onClick={OnResetColor}>
-  Reset
-</div></li>
-  if(m.m == 'Product Type' && typeL > 0)
-  return <li className='bg-gj border-1'>{typeL} Selected <div className="reset text-gray-500 float-right mr-4" onClick={OnResetType}>
-  Reset
-</div></li>
-  return 
-}
+  const Total = (m) => {
+    if (m.m === 'Color' && colorL > 0)
+      return (
+        <li className="bg-gj border-1">
+          {colorL} Selected{' '}
+          <div
+            className="reset text-gray-500 float-right mr-4"
+            onClick={OnResetColor}
+          >
+            Reset
+          </div>
+        </li>
+      );
+    if (m.m == 'Product Type' && typeL > 0)
+      return (
+        <li className="bg-gj border-1">
+          {typeL} Selected{' '}
+          <div
+            className="reset text-gray-500 float-right mr-4"
+            onClick={OnResetType}
+          >
+            Reset
+          </div>
+        </li>
+      );
+    return;
+  };
 
   const List = ({ data }) =>
     Object.entries(data).map(([key, value]) => {
@@ -198,10 +211,10 @@ const Total = (m) => {
                 <FaArrowDown />
               </span>
             </p>
-            <Total m={key}/>
+            <Total m={key} />
             {value.map((value) => (
               <li
-                className={'main'+value}
+                className={'main' + value}
                 data-filter-value={value}
                 filter-name={key}
                 onClick={onFilterAvailabilityParam}
@@ -211,14 +224,16 @@ const Total = (m) => {
             ))}
           </div>
         </ul>
-        
       );
     });
 
   return (
     <Section>
       <div className="collection-filter-sorting-container shadow-filts relative pr-4">
-        <div className="flex flex-col sm:flex-row gap-y-3 sm:gap-0" onClick={OnClickFilter}>
+        <div
+          className="flex flex-col sm:flex-row gap-y-3 sm:gap-0"
+          onClick={OnClickFilter}
+        >
           <p className="filter-title ml-4 sm:ml-0 ">Filter:</p>
           <div className="nested-availability-filter flex-col flex gap-y-3 sm:flex-row sm:gap-0 items-start sm:items-center">
             <div
@@ -259,9 +274,12 @@ const Total = (m) => {
                 <button type="button" onClick={onSubmitFilter}>
                   Apply
                 </button>
-                <div className="text-gray-500 float-right mr-4 top-13 relative" onClick={OnResetPrice}>
-  Reset
-</div>
+                <div
+                  className="text-gray-500 float-right mr-4 top-13 relative"
+                  onClick={OnResetPrice}
+                >
+                  Reset
+                </div>
               </div>
             </div>
             <div
@@ -271,8 +289,10 @@ const Total = (m) => {
             >
               <List data={filterObj}>asdsd</List>
             </div>
-            
-            <div className='text-gray-500 right-0 absolute mr-4 top-4'>{prodCount} products</div>
+
+            <div className="text-gray-500 right-0 absolute mr-4 top-4">
+              {prodCount} products
+            </div>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import {Suspense} from 'react';
+import { Suspense } from 'react';
 import renderHydrogen from '@shopify/hydrogen/entry-server';
 import {
   FileRoutes,
@@ -11,11 +11,10 @@ import {
   CartProvider,
 } from '@shopify/hydrogen';
 
-import {HeaderFallback} from '~/components';
-import {DefaultSeo, NotFound} from '~/components/index.server';
-import { Provider } from 'react-redux'
+import { HeaderFallback } from '~/components';
+import { DefaultSeo, NotFound } from '~/components/index.server';
 
-function App({request}) {
+function App({ request }) {
   const pathname = new URL(request.normalizedUrl).pathname;
   const localeMatch = /^\/([a-z]{2})(\/|$)/i.exec(pathname);
   const countryCode = localeMatch ? localeMatch[1] : undefined;
@@ -23,9 +22,7 @@ function App({request}) {
   const isHome = pathname === `/${countryCode ? countryCode + '/' : ''}`;
 
   return (
-
     <Suspense fallback={<HeaderFallback isHome={isHome} />}>
-          
       <ShopifyProvider countryCode={countryCode}>
         <CartProvider countryCode={countryCode}>
           <Suspense>
@@ -42,7 +39,6 @@ function App({request}) {
         {import.meta.env.DEV && <PerformanceMetricsDebug />}
         <ShopifyAnalytics />
       </ShopifyProvider>
-      
     </Suspense>
   );
 }

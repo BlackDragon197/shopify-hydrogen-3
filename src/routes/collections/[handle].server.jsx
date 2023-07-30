@@ -11,7 +11,7 @@ import {
 import { PRODUCT_CARD_FRAGMENT } from '~/lib/fragments';
 import {
   PageHeader,
-  ProductGrid, 
+  ProductGrid,
   Section,
   Text,
   CollectionFilter,
@@ -29,7 +29,6 @@ var type;
 var filterColor = false;
 var filterType = false;
 export default function Collection({ params, request }) {
-  console.log('ara: ', params);
   const { handle } = params;
   const url = new URL(request.url);
   sortKey = url.searchParams.get('sortkey');
@@ -74,18 +73,6 @@ export default function Collection({ params, request }) {
         })
       : filterPrice === false
       ? useShopQuery({
-        query: COLLECTION_QUERY,
-        variables: {
-          handle,
-          language,
-          country,
-          pageBy,
-          sortKey,
-          sortReverse,
-        },
-        preload: true,
-      })
-      : useShopQuery({
           query: COLLECTION_QUERY,
           variables: {
             handle,
@@ -97,6 +84,18 @@ export default function Collection({ params, request }) {
           },
           preload: true,
         })
+      : useShopQuery({
+          query: COLLECTION_QUERY,
+          variables: {
+            handle,
+            language,
+            country,
+            pageBy,
+            sortKey,
+            sortReverse,
+          },
+          preload: true,
+        });
 
   let typ = useShopQuery({
     query: COLLECTION_FILTERS,
@@ -115,9 +114,6 @@ export default function Collection({ params, request }) {
     },
     preload: true,
   }).data.collection.products;
-  console.log(
-    'length: ',collection
-  );
 
   // let arr = [];
   // Object.keys(mem).forEach(function (a) {
@@ -170,11 +166,9 @@ export default function Collection({ params, request }) {
       types.add(el.node);
     });
   });
-  console.log('alp: ', collection.length);
   colorObj.Color = Array.from(colors);
   let typeL = filterObj['Product Type'].length;
-  let colorL = colorObj['Color'].length
-  console.log('typel ', filterObj ,colorObj)
+  let colorL = colorObj['Color'].length;
   filterObj['Product Type'] = Array.from(types);
   Object.assign(filterObj, colorObj);
 
@@ -205,7 +199,7 @@ export default function Collection({ params, request }) {
               <Text format width="narrow" as="p" className="inline-block">
                 {collection.description}
               </Text>
-            </div> 
+            </div>
           </div>
         )}
       </PageHeader>

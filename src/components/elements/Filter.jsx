@@ -16,7 +16,6 @@ export async function getProductTypes() {
     ? response.data.shop.products.edges
     : [];
   const productTypes = Array.from(new Set(rawProductTypes));
-  console.log('tut:', productTypes);
   return productTypes;
 }
 
@@ -24,4 +23,3 @@ export async function filter(type) {
   let filtredProducts = await getProductsInCollection();
   return filtredProducts.filter((product) => product.node.productType === type);
 }
-
