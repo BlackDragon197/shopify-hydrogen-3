@@ -5,6 +5,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "dev:wind": "tailwindcss  -o ./src/assets/wind.css --watch",
     "dev": "shopify hydrogen dev",
     "build": "shopify hydrogen build",
     "preview": "shopify hydrogen preview",
@@ -34,13 +35,16 @@
   "dependencies": {
     "@headlessui/react": "^1.6.4",
     "@heroicons/react": "^1.0.6",
+    "@reduxjs/toolkit": "^1.9.5",
     "@shopify/hydrogen": "^1.1.0",
     "clsx": "^1.1.1",
     "graphql-tag": "^2.12.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^8.1.2",
     "react-router-dom": "^6.14.2",
     "react-use": "^17.4.0",
+    "redux": "^4.2.1",
     "title": "^3.4.4",
     "typographic-base": "^1.0.4"
   }

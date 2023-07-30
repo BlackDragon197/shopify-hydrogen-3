@@ -1,6 +1,5 @@
 import {Link, useUrl, useCart} from '@shopify/hydrogen';
 import {useWindowScroll} from 'react-use';
-
 import {
   Heading,
   IconAccount,

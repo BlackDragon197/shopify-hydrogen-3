@@ -2,7 +2,6 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link, flattenConnection, useUrl } from '@shopify/hydrogen';
 import { Button, Grid, ProductCard } from '~/components';
 import { getImageLoadingPriority } from '~/lib/const';
-
 export function ProductGrid({ url, collection }) {
   const nextButtonRef = useRef(null);
   const initialProducts = collection?.products?.nodes || [];
@@ -36,8 +35,10 @@ export function ProductGrid({ url, collection }) {
         if (typeof item.value == 'string') item.value = [item.value];
         filts.push(item);
       }
-    });
+    }), [];
+    
     setFilter(filts);
+    prodmem = products;
     function filterByType(value) {
       filts.map((fil) => {
         if (fil.name === 'Product Type') {
@@ -45,36 +46,33 @@ export function ProductGrid({ url, collection }) {
             filteredProducts.add(value);
             console.log(fil.name);
           }
+          prodmem = Array.from(filteredProducts);
         }
       });
     }
     function filterByColor(value) {
       filts.map((fil) => {
-        // if ((fil.name = 'Color')) {
-        // if ( value.options.some(el => Object.values(fil)[1].includes(el.value)) Object.values(fil)[1].includes(value.productType)) {
-        //console.log(value);
-        //   filteredProducts.add(value);
-        // }
         if (fil.name === 'Color') {
           let p = value?.options?.filter((k) => k.name === 'Color')[0]?.values;
           let f = filts.filter((k) => k.name === 'Color')[0].value;
           p?.map((pval) => {
             f?.includes(pval) ? filteredProducts.add(value) : '';
           });
-          console.log(f);
-          console.log(p);
+          prodmem = Array.from(filteredProducts);
+          //console.log(f);
+          //console.log(p);
         }
-        //   }
       });
     }
-    products.filter(filterByType);
-    products.filter(filterByColor);
-    prodmem = products;
-    prodmem = Array.from(filteredProducts);
-    
+    filts.map((fil) => {
+    fil.name==='Color'?products.filter(filterByColor):fil.name==='Color'?products.filter(filterByType):''
+    })
     console.log('ama: ', prodmem);
-    console.log('ama2: ', filteredProducts);
+    localStorage.setItem('prodCount', prodmem.length||0)
+    window.dispatchEvent(new Event("storage"));
   }, [search]);
+
+
 
   const fetchProducts = useCallback(async () => {
     setPending(true);

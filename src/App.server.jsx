@@ -13,6 +13,7 @@ import {
 
 import {HeaderFallback} from '~/components';
 import {DefaultSeo, NotFound} from '~/components/index.server';
+import { Provider } from 'react-redux'
 
 function App({request}) {
   const pathname = new URL(request.normalizedUrl).pathname;
@@ -22,7 +23,9 @@ function App({request}) {
   const isHome = pathname === `/${countryCode ? countryCode + '/' : ''}`;
 
   return (
+
     <Suspense fallback={<HeaderFallback isHome={isHome} />}>
+          
       <ShopifyProvider countryCode={countryCode}>
         <CartProvider countryCode={countryCode}>
           <Suspense>
@@ -39,6 +42,7 @@ function App({request}) {
         {import.meta.env.DEV && <PerformanceMetricsDebug />}
         <ShopifyAnalytics />
       </ShopifyProvider>
+      
     </Suspense>
   );
 }

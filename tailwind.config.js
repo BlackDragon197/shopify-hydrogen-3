@@ -19,9 +19,10 @@ module.exports = {
         contrast: withOpacityValue('--color-contrast'),
         notice: withOpacityValue('--color-accent'),
         shopPay: 'var(--color-shop-pay)',
+        gj: 'rgb(243, 244, 246) !important',
       },
       screens: {
-        sm: '32em',
+        sm: '550px',
         md: '48em',
         lg: '64em',
         xl: '80em',
@@ -64,8 +65,10 @@ module.exports = {
         border: 'inset 0px 0px 0px 1px rgb(var(--color-primary) / 0.08)',
         darkHeader: 'inset 0px -1px 0px 0px rgba(21, 21, 21, 0.4)',
         lightHeader: 'inset 0px -1px 0px 0px rgba(21, 21, 21, 0.05)',
-      },
-    },
+        filts: '0px 0px 1px 2px rgb(0 0 0 / 0.1)',
+        opts: '0px 0px 2px 1px rgba(0, 0, 0, 0.2)',
+      }
+    }
   },
   // eslint-disable-next-line node/no-unpublished-require
   plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],

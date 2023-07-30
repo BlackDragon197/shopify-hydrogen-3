@@ -11,7 +11,7 @@ import {
 import { PRODUCT_CARD_FRAGMENT } from '~/lib/fragments';
 import {
   PageHeader,
-  ProductGrid,
+  ProductGrid, 
   Section,
   Text,
   CollectionFilter,
@@ -34,7 +34,6 @@ export default function Collection({ params, request }) {
   const url = new URL(request.url);
   sortKey = url.searchParams.get('sortkey');
   sortReverse = url.searchParams.get('reverse') === 'true' ? true : false;
-  let filterAvailability = true;
 
   filterColor = url.searchParams.has('Color') ? true : false;
   filterColor ? (color = url.searchParams.get('Color')) : '';
@@ -73,58 +72,19 @@ export default function Collection({ params, request }) {
           },
           preload: true,
         })
-      : filterType === true
+      : filterPrice === false
       ? useShopQuery({
-          query: COLLECTION_FILTER_SIZE,
-          variables: {
-            handle,
-            language,
-            country,
-            pageBy,
-            sortKey,
-            sortReverse,
-          },
-          preload: true,
-        })
-      : filterColor === true
-      ? useShopQuery({
-          query: COLLECTION_QUERY,
-          variables: {
-            handle,
-            language,
-            country,
-            pageBy,
-            sortKey,
-            sortReverse,
-          },
-          preload: true,
-        })
-      : filterAvailability === 'both'
-      ? useShopQuery({
-          query: COLLECTION_QUERY,
-          variables: {
-            handle,
-            language,
-            country,
-            pageBy,
-            sortKey,
-            sortReverse,
-          },
-          preload: true,
-        })
-      : fullparams.length === 0
-      ? useShopQuery({
-          query: COLLECTION_QUERY,
-          variables: {
-            handle,
-            language,
-            country,
-            pageBy,
-            sortKey,
-            sortReverse,
-          },
-          preload: true,
-        })
+        query: COLLECTION_QUERY,
+        variables: {
+          handle,
+          language,
+          country,
+          pageBy,
+          sortKey,
+          sortReverse,
+        },
+        preload: true,
+      })
       : useShopQuery({
           query: COLLECTION_QUERY,
           variables: {
@@ -136,7 +96,7 @@ export default function Collection({ params, request }) {
             sortReverse,
           },
           preload: true,
-        });
+        })
 
   let typ = useShopQuery({
     query: COLLECTION_FILTERS,
@@ -156,12 +116,7 @@ export default function Collection({ params, request }) {
     preload: true,
   }).data.collection.products;
   console.log(
-    'filterprice:',
-    filterPrice,
-    'color:',
-    filterColor,
-    'type',
-    filterType
+    'length: ',collection
   );
 
   // let arr = [];
@@ -215,11 +170,13 @@ export default function Collection({ params, request }) {
       types.add(el.node);
     });
   });
-  console.log('alp: ', types);
+  console.log('alp: ', collection.length);
   colorObj.Color = Array.from(colors);
+  let typeL = filterObj['Product Type'].length;
+  let colorL = colorObj['Color'].length
+  console.log('typel ', filterObj ,colorObj)
   filterObj['Product Type'] = Array.from(types);
   Object.assign(filterObj, colorObj);
-  console.log(filterObj, collection);
 
   let filteredCollection = {};
 
@@ -248,7 +205,7 @@ export default function Collection({ params, request }) {
               <Text format width="narrow" as="p" className="inline-block">
                 {collection.description}
               </Text>
-            </div>
+            </div> 
           </div>
         )}
       </PageHeader>

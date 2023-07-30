@@ -1,10 +1,57 @@
-import { Section, Text } from '~/components';
-import { useState } from 'react';
+import { Section } from '~/components';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { useUrl } from '@shopify/hydrogen';
 import './css/custom.css';
 import { FaArrowDown } from './FaArrowDown';
 export function CollectionFilter({ minPrice, maxPrice, filterObj }) {
   const [minPriceRange, setminPriceRange] = useState(minPrice);
   const [maxPriceRange, setmaxPriceRange] = useState(maxPrice);
+  const [prodCount, setProdCount] = useState()
+  let item;
+  
+  let search = useUrl().searchParams;
+  window.addEventListener('storage', () => {
+    item = localStorage.getItem('prodCount')
+    setProdCount(item)
+})
+  let typeL = search.getAll('Product Type').length
+  let colorL = search.getAll('Color').length
+  console.log('colfe', typeL, colorL)
+// useEffect(() => {
+//   let totalChanges = 0;
+//   for (const [key, value] of search.entries()) {
+//     if (key === 'Color' || key === 'Product Type') {
+//       let temp = document.getElementsByClassName('main' + value);
+//       if (temp.length) {
+//         totalChanges++;
+//       }
+//     }
+//   }
+// }, [search]);
+
+// useEffect(() => {
+//   for (const [key, value] of search.entries()) {
+//     if (key === 'Color' || key === 'Product Type') {
+//       let temp = document.getElementsByClassName('main' + value);
+
+//         temp[0].classList.add('font-bold');
+//     }
+//   }
+// }, [search]);
+  setTimeout(() => {
+    for (const [key, value] of search.entries()) {
+      if (key === 'Color'){
+        let temp = document.getElementsByClassName('main'+value);
+        if(temp.length){
+          temp[0].classList.add('font-bold');
+        }
+
+      }else if(key === "Product Type"){
+        let temp = document.getElementsByClassName('main'+value);
+        temp[0]?.classList.add('font-bold')
+      }
+    }
+  }, 0);
 
   const OnClickFilter = (event) => {
     if (event.target.closest('.filter-title')) {
@@ -25,14 +72,26 @@ export function CollectionFilter({ minPrice, maxPrice, filterObj }) {
     event.target.closest('.nested-list').classList.toggle('show');
   };
 
-  const OnReset = (event) => {
+  const OnResetColor = (event) => {
     const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.search);
-    params.forEach((value, key) => {
-      url.searchParams.delete(key, value);
-    });
+      url.searchParams.delete('Color');
     window.location.href = url.toString();
-  };
+  }
+
+const OnResetType = (event) => {
+    const url = new URL(window.location.href)
+    url.searchParams.delete('Product Type');
+    window.location.href = url.toString();
+  }
+
+  const OnResetPrice = (event) => {
+    const url = new URL(window.location.href)
+    url.searchParams.delete('price');
+    url.searchParams.delete('min')
+    url.searchParams.delete('max')
+    window.location.href = url.toString();
+  }
+
 
   const onFilterAvailabilityParam = (event) => {
     const url = new URL(window.location.href);
@@ -52,6 +111,7 @@ export function CollectionFilter({ minPrice, maxPrice, filterObj }) {
     } else {
       url.searchParams.append(filterName, filterValue);
     }
+   
     // if (params.has(filterName, filterValue)) {
     //   url.searchParams.delete(filterName, filterValue);
     // } else {
@@ -115,19 +175,33 @@ export function CollectionFilter({ minPrice, maxPrice, filterObj }) {
     }
   };
 
+const Total = (m) => {
+  if(m.m === 'Color' && colorL>0)
+  return <li className='bg-gj border-1'>{colorL} Selected <div className="reset text-gray-500 float-right mr-4" onClick={OnResetColor}>
+  Reset
+</div></li>
+  if(m.m == 'Product Type' && typeL > 0)
+  return <li className='bg-gj border-1'>{typeL} Selected <div className="reset text-gray-500 float-right mr-4" onClick={OnResetType}>
+  Reset
+</div></li>
+  return 
+}
+
   const List = ({ data }) =>
     Object.entries(data).map(([key, value]) => {
       return (
-        <ul className="ul-inline">
+        <ul className="ml-4 shadow-opts ul-inline w-full whitespace-nowrap text-center hover:ring-offset-2 hover:ring-2 hover:ring-blue-500 rounded-md h-7">
           <div className="nested-list solo">
-            <p className="li-cap">
+            <p className="li-cap ">
               <span>{key}</span>
               <span className="svg-sp">
                 <FaArrowDown />
               </span>
             </p>
+            <Total m={key}/>
             {value.map((value) => (
               <li
+                className={'main'+value}
                 data-filter-value={value}
                 filter-name={key}
                 onClick={onFilterAvailabilityParam}
@@ -137,17 +211,18 @@ export function CollectionFilter({ minPrice, maxPrice, filterObj }) {
             ))}
           </div>
         </ul>
+        
       );
     });
 
   return (
     <Section>
-      <div className="collection-filter-sorting-container">
-        <div className="flex-row" onClick={OnClickFilter}>
-          <p className="filter-title">Filter:</p>
-          <div className="nested-availability-filter flex-row">
+      <div className="collection-filter-sorting-container shadow-filts relative pr-4">
+        <div className="flex flex-col sm:flex-row gap-y-3 sm:gap-0" onClick={OnClickFilter}>
+          <p className="filter-title ml-4 sm:ml-0 ">Filter:</p>
+          <div className="nested-availability-filter flex-col flex gap-y-3 sm:flex-row sm:gap-0 items-start sm:items-center">
             <div
-              className="collection-price-container"
+              className="ml-4 shadow-opts collection-price-container hover:ring-offset-2 hover:ring-2 hover:ring-blue-500 rounded-md text-center h-7 w-20"
               onClick={onFilterPriceParam}
             >
               <div className="filter-price">
@@ -184,18 +259,20 @@ export function CollectionFilter({ minPrice, maxPrice, filterObj }) {
                 <button type="button" onClick={onSubmitFilter}>
                   Apply
                 </button>
+                <div className="text-gray-500 float-right mr-4 top-13 relative" onClick={OnResetPrice}>
+  Reset
+</div>
               </div>
             </div>
             <div
-              className="nested-list flex-row"
+              className="nested-list flex-col flex sm:flex-row gap-y-3 sm:gap-0 filtis "
               data-filter-key="STOCK"
               onClick={onFilterParam}
             >
               <List data={filterObj}>asdsd</List>
             </div>
-            <div className="reset" onClick={OnReset}>
-              Reset
-            </div>
+            
+            <div className='text-gray-500 right-0 absolute mr-4 top-4'>{prodCount} products</div>
           </div>
         </div>
       </div>

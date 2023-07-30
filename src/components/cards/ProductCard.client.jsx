@@ -63,13 +63,13 @@ export function ProductCard({product, label, className, loading, onClick}) {
         </div>
         <div className="grid gap-1">
           <Text
-            className="w-full overflow-hidden whitespace-nowrap text-ellipsis "
+            className="w-full overflow-hidden whitespace-nowrap text-ellipsis text-gray-500"
             as="h3"
           >
             {product.title}
           </Text>
           <div className="flex gap-4">
-            <Text className="flex gap-4">
+            <Text className="flex gap-4 text-gray-500">
               <Money withoutTrailingZeros data={price} />
               {isDiscounted(price, compareAtPrice) && (
                 <CompareAtPrice
